@@ -20,12 +20,12 @@ export default function LessonsPage() {
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  const url = categoryFilter
-    ? `/api/lessons?category=${encodeURIComponent(categoryFilter)}`
-    : "/api/lessons";
-  const { data, loading } = useFetch<LessonItem[]>(url);
+  const { data, loading } = useFetch<LessonItem[]>("/api/lessons");
 
   const categories = data ? [...new Set(data.map((l) => l.category))] : [];
+  const filtered = categoryFilter
+    ? data?.filter((l) => l.category === categoryFilter)
+    : data;
 
   if (loading) {
     return (
@@ -75,7 +75,7 @@ export default function LessonsPage() {
         </div>
       )}
 
-      {data.map((lesson) => {
+      {filtered?.map((lesson) => {
         const isExpanded = expandedId === lesson.id;
         return (
           <Card
