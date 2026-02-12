@@ -3,13 +3,21 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import {
+  LayoutDashboard,
+  PieChart,
+  ArrowLeftRight,
+  BookOpen,
+  MoreHorizontal,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
-const tabs = [
-  { href: "/", label: "Home", icon: "🏠" },
-  { href: "/portfolio", label: "Portfolio", icon: "📊" },
-  { href: "/trades", label: "Trades", icon: "⚡" },
-  { href: "/journal", label: "Journal", icon: "📝" },
-  { href: "/more", label: "More", icon: "•••" },
+const tabs: { href: string; label: string; icon: LucideIcon }[] = [
+  { href: "/", label: "Home", icon: LayoutDashboard },
+  { href: "/portfolio", label: "Portfolio", icon: PieChart },
+  { href: "/trades", label: "Trades", icon: ArrowLeftRight },
+  { href: "/journal", label: "Journal", icon: BookOpen },
+  { href: "/more", label: "More", icon: MoreHorizontal },
 ];
 
 export function BottomNav() {
@@ -23,6 +31,7 @@ export function BottomNav() {
             tab.href === "/"
               ? pathname === "/"
               : pathname.startsWith(tab.href);
+          const Icon = tab.icon;
           return (
             <Link
               key={tab.href}
@@ -34,7 +43,7 @@ export function BottomNav() {
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
-              <span className="text-lg">{tab.icon}</span>
+              <Icon className="h-5 w-5" strokeWidth={isActive ? 2.25 : 1.75} />
               <span>{tab.label}</span>
             </Link>
           );
