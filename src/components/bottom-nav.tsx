@@ -74,7 +74,7 @@ export function BottomNav() {
               key={tab.href}
               href={tab.href}
               className={cn(
-                "flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px] transition-colors",
+                "flex flex-1 flex-col items-center gap-0.5 py-3 text-[10px] transition-colors",
                 active
                   ? "text-foreground"
                   : "text-muted-foreground hover:text-foreground"
@@ -91,7 +91,7 @@ export function BottomNav() {
           <button
             onClick={() => setOpen((v) => !v)}
             className={cn(
-              "flex flex-col items-center gap-0.5 py-2 text-[10px] transition-colors",
+              "flex flex-col items-center gap-0.5 py-3 text-[10px] transition-colors",
               moreIsActive
                 ? "text-foreground"
                 : "text-muted-foreground hover:text-foreground"
@@ -105,7 +105,7 @@ export function BottomNav() {
           </button>
 
           {open && (
-            <div className="absolute bottom-full right-0 mb-2 min-w-[160px] rounded-xl border border-border bg-background p-1.5 shadow-lg">
+            <div className="absolute bottom-full right-0 mb-2 min-w-[160px] rounded-xl border border-border bg-card p-1.5 shadow-lg ring-1 ring-border">
               {moreTabs.map((tab) => {
                 const active = isActive(tab.href, pathname);
                 const Icon = tab.icon;
