@@ -23,6 +23,7 @@ const periods = [
 
 interface ChartDataPoint {
   date: string;
+  fullDate: string;
   equity: number;
   timestamp: number;
 }
@@ -38,7 +39,7 @@ function CustomTooltip({
   const data = payload[0].payload;
   return (
     <div className="rounded-lg border border-border bg-card px-3 py-2 text-sm shadow-md">
-      <p className="text-muted-foreground">{data.date}</p>
+      <p className="text-muted-foreground">{data.fullDate}</p>
       <p className="font-semibold tabular-nums">{formatCurrency(data.equity)}</p>
     </div>
   );
@@ -62,11 +63,19 @@ export function EquityChart() {
     );
   }
 
-  const chartData: ChartDataPoint[] = data.timestamp.map((ts, i) => ({
-    date: formatDateSGT(new Date(ts * 1000)),
-    equity: data.equity[i],
-    timestamp: ts,
-  }));
+  const chartData: ChartDataPoint[] = data.timestamp.map((ts, i) => {
+    const d = new Date(ts * 1000);
+    return {
+      date: d.toLocaleDateString("en-SG", {
+        timeZone: "Asia/Singapore",
+        day: "numeric",
+        month: "short",
+      }),
+      fullDate: formatDateSGT(d),
+      equity: data.equity[i],
+      timestamp: ts,
+    };
+  });
 
   const firstEquity = chartData[0]?.equity ?? 0;
   const lastEquity = chartData[chartData.length - 1]?.equity ?? 0;
@@ -96,7 +105,7 @@ export function EquityChart() {
           />
           <Tooltip content={<CustomTooltip />} />
           <Line
-            type="monotone"
+            type="linear"
             dataKey="equity"
             stroke={lineColor}
             strokeWidth={2}
