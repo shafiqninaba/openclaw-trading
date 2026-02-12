@@ -64,7 +64,7 @@ export function BottomNav() {
   }, [open]);
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-[#09090b]/95 backdrop-blur-sm">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 backdrop-blur-sm">
       <div className="mx-auto flex max-w-lg items-center justify-around">
         {primaryTabs.map((tab) => {
           const active = isActive(tab.href, pathname);
@@ -105,7 +105,7 @@ export function BottomNav() {
           </button>
 
           {open && (
-            <div className="absolute bottom-full right-0 mb-2 min-w-[160px] rounded-xl border border-border bg-[#09090b] p-1.5 shadow-lg">
+            <div className="absolute bottom-full right-0 mb-2 min-w-[160px] rounded-xl border border-border bg-background p-1.5 shadow-lg">
               {moreTabs.map((tab) => {
                 const active = isActive(tab.href, pathname);
                 const Icon = tab.icon;
