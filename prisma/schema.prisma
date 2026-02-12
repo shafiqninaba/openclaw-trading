@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model JournalEntry {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  date      DateTime @unique @db.Date
+  content   String   @db.Text
+  summary   String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  @@map("journal_entries")
+}
+
+model TradeReasoning {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  alpacaOrderId  String   @unique @map("alpaca_order_id")
+  symbol         String
+  side           String
+  reasoning      String   @db.Text
+  strategy       String?
+  stopLoss       Decimal? @map("stop_loss") @db.Decimal
+  takeProfit     Decimal? @map("take_profit") @db.Decimal
+  lesson         String?  @db.Text
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  lessons Lesson[]
+
+  @@map("trade_reasoning")
+}
+
+model Watchlist {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  symbol      String   @unique
+  notes       String?  @db.Text
+  targetEntry Decimal? @map("target_entry") @db.Decimal
+  targetExit  Decimal? @map("target_exit") @db.Decimal
+  stopLoss    Decimal? @map("stop_loss") @db.Decimal
+  status      String   @default("watching")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  @@map("watchlist")
+}
+
+model Lesson {
+  id               String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title            String
+  description      String          @db.Text
+  category         String
+  taughtAt         DateTime        @map("taught_at") @db.Date
+  tradeReasoningId String?         @map("trade_reasoning_id") @db.Uuid
+  tradeReasoning   TradeReasoning? @relation(fields: [tradeReasoningId], references: [id])
+
+  @@map("lessons")
+}
