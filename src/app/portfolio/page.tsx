@@ -31,7 +31,6 @@ export default function PortfolioPage() {
 
   const equity = account ? parseFloat(account.equity) : 0;
   const cash = account ? parseFloat(account.cash) : 0;
-  const buyingPower = account ? parseFloat(account.buying_power) : 0;
 
   const reasoningMap = new Map(
     reasonings?.map((r) => [r.alpacaOrderId, r]) ?? []
@@ -44,9 +43,9 @@ export default function PortfolioPage() {
   return (
     <div className="space-y-6">
       {/* Account Summary */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 gap-3">
         {accountLoading ? (
-          [1, 2, 3].map((i) => (
+          [1, 2].map((i) => (
             <Skeleton key={i} className="h-16 rounded-lg" />
           ))
         ) : (
@@ -64,14 +63,6 @@ export default function PortfolioPage() {
                 <p className="text-xs text-muted-foreground">Cash</p>
                 <p className="text-sm font-semibold tabular-nums">
                   {formatCurrency(cash)}
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-3">
-                <p className="text-xs text-muted-foreground">Buying Power</p>
-                <p className="text-sm font-semibold tabular-nums">
-                  {formatCurrency(buyingPower)}
                 </p>
               </CardContent>
             </Card>
