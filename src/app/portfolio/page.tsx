@@ -43,7 +43,7 @@ export default function PortfolioPage() {
   return (
     <div className="space-y-6">
       {/* Account Summary */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {accountLoading ? (
           [1, 2].map((i) => (
             <Skeleton key={i} className="h-16 rounded-lg" />
@@ -66,6 +66,22 @@ export default function PortfolioPage() {
                 </p>
               </CardContent>
             </Card>
+            <Card className="hidden lg:block">
+              <CardContent className="p-3">
+                <p className="text-xs text-muted-foreground">Buying Power</p>
+                <p className="text-sm font-semibold tabular-nums">
+                  {formatCurrency(account ? parseFloat(account.buying_power) : 0)}
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="hidden lg:block">
+              <CardContent className="p-3">
+                <p className="text-xs text-muted-foreground">Today P/L</p>
+                <p className={`text-sm font-semibold tabular-nums ${plColor(equity - (account ? parseFloat(account.last_equity) : 0))}`}>
+                  {formatPL(equity - (account ? parseFloat(account.last_equity) : 0))}
+                </p>
+              </CardContent>
+            </Card>
           </>
         )}
       </div>
@@ -80,7 +96,8 @@ export default function PortfolioPage() {
         </CardContent>
       </Card>
 
-      {/* Position Cards */}
+      {/* Positions + Trades side by side on desktop */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div>
         <h2 className="mb-3 text-sm font-medium text-muted-foreground">
           Open Positions
@@ -151,7 +168,6 @@ export default function PortfolioPage() {
         )}
       </div>
 
-      {/* Closed Trades */}
       <div>
         <h2 className="mb-3 text-sm font-medium text-muted-foreground">
           Closed Trades
@@ -194,6 +210,7 @@ export default function PortfolioPage() {
             })}
           </div>
         )}
+      </div>
       </div>
     </div>
   );

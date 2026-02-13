@@ -4,36 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import {
-  LayoutDashboard,
-  PieChart,
-  ArrowLeftRight,
-  BookOpen,
-  Eye,
-  GraduationCap,
-  Info,
-  MoreHorizontal,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-
-interface Tab {
-  href: string;
-  label: string;
-  icon: LucideIcon;
-}
-
-const primaryTabs: Tab[] = [
-  { href: "/", label: "Home", icon: LayoutDashboard },
-  { href: "/portfolio", label: "Portfolio", icon: PieChart },
-  { href: "/trades", label: "Trades", icon: ArrowLeftRight },
-];
-
-const moreTabs: Tab[] = [
-  { href: "/journal", label: "Journal", icon: BookOpen },
-  { href: "/watchlist", label: "Watchlist", icon: Eye },
-  { href: "/lessons", label: "Lessons", icon: GraduationCap },
-  { href: "/about", label: "About", icon: Info },
-];
+import { MoreHorizontal } from "lucide-react";
+import { primaryTabs, secondaryTabs } from "@/lib/navigation";
 
 function isActive(href: string, pathname: string) {
   return href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -44,7 +16,7 @@ export function BottomNav() {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const moreIsActive = moreTabs.some((t) => isActive(t.href, pathname));
+  const moreIsActive = secondaryTabs.some((t) => isActive(t.href, pathname));
 
   // Close menu on route change
   useEffect(() => {
@@ -64,7 +36,7 @@ export function BottomNav() {
   }, [open]);
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 backdrop-blur-sm">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 backdrop-blur-sm lg:hidden">
       <div className="mx-auto flex max-w-lg items-center justify-around">
         {primaryTabs.map((tab) => {
           const active = isActive(tab.href, pathname);
@@ -106,7 +78,7 @@ export function BottomNav() {
 
           {open && (
             <div className="absolute bottom-full right-0 mb-2 min-w-[160px] rounded-xl border border-border bg-card p-1.5 shadow-lg ring-1 ring-border">
-              {moreTabs.map((tab) => {
+              {secondaryTabs.map((tab) => {
                 const active = isActive(tab.href, pathname);
                 const Icon = tab.icon;
                 return (

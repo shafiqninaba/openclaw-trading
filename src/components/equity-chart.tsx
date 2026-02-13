@@ -52,12 +52,12 @@ export function EquityChart() {
   );
 
   if (loading) {
-    return <Skeleton className="h-[200px] w-full rounded-xl" />;
+    return <Skeleton className="h-[200px] lg:h-[320px] w-full rounded-xl" />;
   }
 
   if (!data || !data.equity?.length) {
     return (
-      <div className="flex h-[200px] items-center justify-center rounded-xl border border-border text-sm text-muted-foreground">
+      <div className="flex h-[200px] lg:h-[320px] items-center justify-center rounded-xl border border-border text-sm text-muted-foreground">
         No equity history yet
       </div>
     );
@@ -84,7 +84,8 @@ export function EquityChart() {
 
   return (
     <div className="space-y-3">
-      <ResponsiveContainer width="100%" height={200}>
+      <div className="h-[200px] lg:h-[320px]">
+      <ResponsiveContainer width="100%" height="100%">
         <LineChart data={chartData}>
           <XAxis
             dataKey="date"
@@ -114,6 +115,7 @@ export function EquityChart() {
           />
         </LineChart>
       </ResponsiveContainer>
+      </div>
 
       <div className="flex items-center justify-center gap-1">
         {periods.map((p) => (

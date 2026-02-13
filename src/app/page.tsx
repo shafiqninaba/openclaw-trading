@@ -65,25 +65,26 @@ export default function HomePage() {
         </CardContent>
       </Card>
 
-      {/* Open Positions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Open Positions</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <PositionsList positions={positions} loading={positionsLoading} />
-        </CardContent>
-      </Card>
+      {/* Positions + Activity side by side on desktop */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Open Positions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <PositionsList positions={positions} loading={positionsLoading} />
+          </CardContent>
+        </Card>
 
-      {/* Recent Activity */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Activity</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ActivityFeed />
-        </CardContent>
-      </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Activity</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ActivityFeed />
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Latest Journal */}
       <Card>

@@ -75,6 +75,7 @@ export default function LessonsPage() {
         </div>
       )}
 
+      <div className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0">
       {filtered?.map((lesson) => {
         const isExpanded = expandedId === lesson.id;
         return (
@@ -116,6 +117,7 @@ export default function LessonsPage() {
           </Card>
         );
       })}
+      </div>
     </div>
   );
 }

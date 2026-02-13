@@ -48,7 +48,7 @@ export default function TradesPage() {
           No trades yet — Awkclaw is watching the market 🐢
         </p>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0">
           {orders.map((order) => {
             const reasoning = reasoningMap.get(order.id);
             const isBuy = order.side === "buy";

@@ -174,7 +174,7 @@ export default function JournalPage() {
           No journal entries yet 🐢
         </p>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-2 lg:grid lg:grid-cols-2 lg:gap-3 lg:space-y-0">
           {entries.map((entry) => (
             <Card
               key={entry.id}
