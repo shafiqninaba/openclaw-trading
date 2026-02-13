@@ -1,19 +1,24 @@
 const ALPACA_BASE_URL =
   process.env.ALPACA_BASE_URL || "https://paper-api.alpaca.markets";
+const ALPACA_DATA_URL = "https://data.alpaca.markets";
 const ALPACA_API_KEY = process.env.ALPACA_API_KEY || "";
 const ALPACA_SECRET_KEY = process.env.ALPACA_SECRET_KEY || "";
 
 const cache = new Map<string, { data: unknown; timestamp: number }>();
 const CACHE_TTL = 30_000; // 30 seconds
 
-async function alpacaFetch<T>(path: string, ttl = CACHE_TTL): Promise<T> {
-  const cacheKey = path;
+async function alpacaFetch<T>(
+  path: string,
+  ttl = CACHE_TTL,
+  baseUrl = ALPACA_BASE_URL
+): Promise<T> {
+  const cacheKey = `${baseUrl}${path}`;
   const cached = cache.get(cacheKey);
   if (cached && Date.now() - cached.timestamp < ttl) {
     return cached.data as T;
   }
 
-  const res = await fetch(`${ALPACA_BASE_URL}${path}`, {
+  const res = await fetch(`${baseUrl}${path}`, {
     headers: {
       "APCA-API-KEY-ID": ALPACA_API_KEY,
       "APCA-API-SECRET-KEY": ALPACA_SECRET_KEY,
@@ -112,5 +117,103 @@ export async function getPortfolioHistory(
   return alpacaFetch<AlpacaPortfolioHistory>(
     `/v2/account/portfolio/history?period=${period}&timeframe=${timeframe}`,
     60_000 // 60 second cache for history
+  );
+}
+
+/* ── Watchlist ─────────────────────────────────────────────── */
+
+export interface AlpacaAsset {
+  id: string;
+  class: string;
+  exchange: string;
+  symbol: string;
+  name: string;
+  status: string;
+  tradable: boolean;
+  marginable: boolean;
+  shortable: boolean;
+  easy_to_borrow: boolean;
+  fractionable: boolean;
+}
+
+export interface AlpacaWatchlist {
+  id: string;
+  account_id: string;
+  name: string;
+  created_at: string;
+  updated_at: string;
+  assets: AlpacaAsset[];
+}
+
+export async function getWatchlists(): Promise<AlpacaWatchlist[]> {
+  // The list endpoint doesn't populate assets — fetch each individually
+  const summaries = await alpacaFetch<AlpacaWatchlist[]>("/v2/watchlists");
+  const full = await Promise.all(
+    summaries.map((wl) =>
+      alpacaFetch<AlpacaWatchlist>(`/v2/watchlists/${wl.id}`)
+    )
+  );
+  return full;
+}
+
+export async function getWatchlistByName(
+  name: string
+): Promise<AlpacaWatchlist> {
+  return alpacaFetch<AlpacaWatchlist>(
+    `/v2/watchlists:by_name?name=${encodeURIComponent(name)}`
+  );
+}
+
+/* ── Market Data Snapshots ─────────────────────────────────── */
+
+export interface SnapshotBar {
+  t: string;
+  o: number;
+  h: number;
+  l: number;
+  c: number;
+  v: number;
+  n: number;
+  vw: number;
+}
+
+export interface SnapshotTrade {
+  t: string;
+  x: string;
+  p: number;
+  s: number;
+  c: string[];
+  i: number;
+  z: string;
+}
+
+export interface SnapshotQuote {
+  t: string;
+  ax: string;
+  ap: number;
+  as: number;
+  bx: string;
+  bp: number;
+  bs: number;
+  c: string[];
+  z: string;
+}
+
+export interface StockSnapshot {
+  latestTrade: SnapshotTrade;
+  latestQuote: SnapshotQuote;
+  minuteBar: SnapshotBar;
+  dailyBar: SnapshotBar;
+  prevDailyBar: SnapshotBar;
+}
+
+export async function getSnapshots(
+  symbols: string[]
+): Promise<Record<string, StockSnapshot>> {
+  if (symbols.length === 0) return {};
+  return alpacaFetch<Record<string, StockSnapshot>>(
+    `/v2/stocks/snapshots?symbols=${symbols.join(",")}`,
+    CACHE_TTL,
+    ALPACA_DATA_URL
   );
 }
