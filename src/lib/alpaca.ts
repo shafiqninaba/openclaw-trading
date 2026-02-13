@@ -62,11 +62,16 @@ export interface AlpacaOrder {
   filled_qty: string;
   side: string;
   type: string;
+  time_in_force: string;
   status: string;
+  limit_price: string | null;
+  stop_price: string | null;
   filled_avg_price: string;
   filled_at: string;
   submitted_at: string;
   created_at: string;
+  order_class: string;
+  legs: AlpacaOrder[] | null;
 }
 
 export interface AlpacaPortfolioHistory {
@@ -91,6 +96,12 @@ export async function getOrders(
 ): Promise<AlpacaOrder[]> {
   return alpacaFetch<AlpacaOrder[]>(
     `/v2/orders?status=filled&limit=${limit}&direction=desc`
+  );
+}
+
+export async function getOpenOrders(): Promise<AlpacaOrder[]> {
+  return alpacaFetch<AlpacaOrder[]>(
+    `/v2/orders?status=open&direction=desc`
   );
 }
 

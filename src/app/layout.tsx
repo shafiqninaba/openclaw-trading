@@ -7,7 +7,7 @@ import { SidebarProvider } from "@/components/sidebar-provider";
 import { ContentArea } from "@/components/content-area";
 
 export const metadata: Metadata = {
-  title: "Awkclaw 🐢 — Paper Trading Dashboard",
+  title: "Paper Trading Dashboard",
   description:
     "AI paper trading bot dashboard. Follow along as Awkclaw learns to trade.",
 };
