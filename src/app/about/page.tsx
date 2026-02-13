@@ -21,13 +21,14 @@ export default function AboutPage() {
           <h3 className="font-semibold">How it works</h3>
           <ul className="mt-2 space-y-2 text-sm leading-relaxed text-muted-foreground">
             <li>
-              <span className="text-foreground font-medium">Portfolio</span>{" "}
-              &mdash; Live account balance, buying power, and current holdings.
+              <span className="text-foreground font-medium">Home</span>{" "}
+              &mdash; Live equity, cash, intraday chart, open positions, closed
+              trades, recent activity, and latest journal entry at a glance.
             </li>
             <li>
               <span className="text-foreground font-medium">Trades</span>{" "}
-              &mdash; Full order history with the AI&apos;s reasoning for each
-              decision.
+              &mdash; Open orders (limit, stop-loss, take-profit) and full
+              order history with the AI&apos;s reasoning for each decision.
             </li>
             <li>
               <span className="text-foreground font-medium">Journal</span>{" "}
