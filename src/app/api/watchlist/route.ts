@@ -61,7 +61,6 @@ export async function GET() {
         fractionable: asset.fractionable,
         // DB metadata
         notes: db?.notes ?? null,
-        status: db?.status ?? "watching",
         updatedAt: db?.updatedAt?.toISOString() ?? null,
       };
     });
@@ -90,7 +89,6 @@ export async function GET() {
         shortable: null,
         fractionable: null,
         notes: item.notes,
-        status: item.status,
         updatedAt: item.updatedAt.toISOString(),
       }));
 

@@ -29,22 +29,8 @@ interface WatchlistItem {
   fractionable: boolean | null;
   // DB metadata
   notes: string | null;
-  status: string;
   updatedAt: string | null;
 }
-
-const statusVariant = (status: string) => {
-  switch (status) {
-    case "watching":
-      return "warning" as const;
-    case "ready":
-      return "success" as const;
-    case "passed":
-      return "secondary" as const;
-    default:
-      return "outline" as const;
-  }
-};
 
 function formatVolume(v: number): string {
   if (v >= 1_000_000) return `${(v / 1_000_000).toFixed(1)}M`;
@@ -92,9 +78,7 @@ export default function WatchlistPage() {
                         {item.exchange}
                       </span>
                     )}
-                    <Badge variant={statusVariant(item.status)}>
-                      {item.status}
-                    </Badge>
+                    <Badge variant="warning">watching</Badge>
                   </div>
                   {item.name && (
                     <p className="truncate text-sm text-muted-foreground">

@@ -17,11 +17,11 @@ export interface NavTab {
 export const primaryTabs: NavTab[] = [
   { href: "/", label: "Home", icon: LayoutDashboard },
   { href: "/trades", label: "Trades", icon: ArrowLeftRight },
+  { href: "/watchlist", label: "Watchlist", icon: Eye },
 ];
 
 export const secondaryTabs: NavTab[] = [
   { href: "/journal", label: "Journal", icon: BookOpen },
-  { href: "/watchlist", label: "Watchlist", icon: Eye },
   { href: "/lessons", label: "Lessons", icon: GraduationCap },
   { href: "/about", label: "About", icon: Info },
 ];
