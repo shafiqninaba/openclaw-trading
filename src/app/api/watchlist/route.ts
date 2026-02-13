@@ -108,8 +108,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { symbol, notes, target_entry, target_exit, stop_loss, status } =
-      body;
+    const { symbol, notes } = body;
 
     if (!symbol) {
       return NextResponse.json(
@@ -122,19 +121,11 @@ export async function POST(req: NextRequest) {
       where: { symbol },
       update: {
         notes: notes || null,
-        targetEntry: target_entry || null,
-        targetExit: target_exit || null,
-        stopLoss: stop_loss || null,
-        status: status || "watching",
         updatedAt: new Date(),
       },
       create: {
         symbol,
         notes: notes || null,
-        targetEntry: target_entry || null,
-        targetExit: target_exit || null,
-        stopLoss: stop_loss || null,
-        status: status || "watching",
       },
     });
 
@@ -148,28 +139,3 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function DELETE(req: NextRequest) {
-  const authError = authenticateBot(req);
-  if (authError) return authError;
-
-  try {
-    const { searchParams } = new URL(req.url);
-    const symbol = searchParams.get("symbol");
-
-    if (!symbol) {
-      return NextResponse.json(
-        { error: "symbol query parameter is required" },
-        { status: 400 }
-      );
-    }
-
-    await prisma.watchlist.delete({ where: { symbol } });
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Failed to delete watchlist item:", error);
-    return NextResponse.json(
-      { error: "Failed to delete watchlist item" },
-      { status: 500 }
-    );
-  }
-}
