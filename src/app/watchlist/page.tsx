@@ -71,7 +71,7 @@ export default function WatchlistPage() {
               </p>
             )}
 
-            <div className="mt-3 flex gap-4 text-xs">
+            <div className="mt-3 flex flex-wrap gap-4 text-xs">
               {item.targetEntry && (
                 <div>
                   <span className="text-muted-foreground">Entry: </span>
@@ -96,6 +96,9 @@ export default function WatchlistPage() {
                   </span>
                 </div>
               )}
+              <div className="ml-auto text-muted-foreground">
+                {new Date(item.updatedAt).toLocaleDateString("en-GB")}
+              </div>
             </div>
           </CardContent>
         </Card>
