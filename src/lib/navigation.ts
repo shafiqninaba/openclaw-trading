@@ -1,6 +1,5 @@
 import {
   LayoutDashboard,
-  PieChart,
   ArrowLeftRight,
   BookOpen,
   Eye,
@@ -17,7 +16,6 @@ export interface NavTab {
 
 export const primaryTabs: NavTab[] = [
   { href: "/", label: "Home", icon: LayoutDashboard },
-  { href: "/portfolio", label: "Portfolio", icon: PieChart },
   { href: "/trades", label: "Trades", icon: ArrowLeftRight },
 ];
 
