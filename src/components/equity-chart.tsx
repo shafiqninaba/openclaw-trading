@@ -15,10 +15,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { AlpacaPortfolioHistory } from "@/lib/alpaca";
 
 const periods = [
-  { label: "1W", value: "1W" },
-  { label: "1M", value: "1M" },
-  { label: "3M", value: "3M" },
-  { label: "All", value: "1A" },
+  { label: "1D", value: "1D", timeframe: "15Min" },
+  { label: "1W", value: "1W", timeframe: "1D" },
+  { label: "1M", value: "1M", timeframe: "1D" },
+  { label: "3M", value: "3M", timeframe: "1D" },
+  { label: "All", value: "1A", timeframe: "1D" },
 ] as const;
 
 interface ChartDataPoint {
@@ -47,8 +48,9 @@ function CustomTooltip({
 
 export function EquityChart() {
   const [period, setPeriod] = useState("1M");
+  const selected = periods.find((p) => p.value === period) ?? periods[2];
   const { data, loading } = useFetch<AlpacaPortfolioHistory>(
-    `/api/history?period=${period}&timeframe=1D`
+    `/api/history?period=${period}&timeframe=${selected.timeframe}`
   );
 
   if (loading) {
@@ -63,15 +65,30 @@ export function EquityChart() {
     );
   }
 
+  const isIntraday = period === "1D";
   const chartData: ChartDataPoint[] = data.timestamp.map((ts, i) => {
     const d = new Date(ts * 1000);
     return {
-      date: d.toLocaleDateString("en-SG", {
-        timeZone: "Asia/Singapore",
-        day: "numeric",
-        month: "short",
-      }),
-      fullDate: formatDateSGT(d),
+      date: isIntraday
+        ? d.toLocaleTimeString("en-SG", {
+            timeZone: "Asia/Singapore",
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : d.toLocaleDateString("en-SG", {
+            timeZone: "Asia/Singapore",
+            day: "numeric",
+            month: "short",
+          }),
+      fullDate: isIntraday
+        ? d.toLocaleString("en-SG", {
+            timeZone: "Asia/Singapore",
+            day: "numeric",
+            month: "short",
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : formatDateSGT(d),
       equity: data.equity[i],
       timestamp: ts,
     };
@@ -81,6 +98,17 @@ export function EquityChart() {
   const lastEquity = chartData[chartData.length - 1]?.equity ?? 0;
   const isPositive = lastEquity >= firstEquity;
   const lineColor = isPositive ? "#22c55e" : "#ef4444";
+
+  const equities = chartData.map((d) => d.equity);
+  const minEquity = Math.min(...equities);
+  const maxEquity = Math.max(...equities);
+  const range = maxEquity - minEquity;
+  const useCompact = range > 5_000;
+
+  const formatYAxis = (v: number) => {
+    if (useCompact) return `$${(v / 1000).toFixed(0)}k`;
+    return `$${v.toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
+  };
 
   return (
     <div className="space-y-3">
@@ -99,10 +127,8 @@ export function EquityChart() {
             tick={{ fontSize: 10, fill: "hsl(240, 5%, 64.9%)" }}
             tickLine={false}
             axisLine={false}
-            tickFormatter={(v: number) =>
-              `$${(v / 1000).toFixed(0)}k`
-            }
-            width={45}
+            tickFormatter={formatYAxis}
+            width={useCompact ? 45 : 70}
           />
           <Tooltip content={<CustomTooltip />} />
           <Line
